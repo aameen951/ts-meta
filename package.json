@@ -1,0 +1,11 @@
+{
+  "name": "ts-meta",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "author": "Ameen Sayegh",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@types/node": "^16.11.12"
+  }
+}
