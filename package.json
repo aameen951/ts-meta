@@ -2,7 +2,7 @@
   "name": "ts-meta",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "author": "Ameen Sayegh",
   "license": "GPL-3.0",
   "scripts": {
