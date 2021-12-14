@@ -5,6 +5,9 @@
   "main": "index.ts",
   "author": "Ameen Sayegh",
   "license": "GPL-3.0",
+  "scripts": {
+    "compile": "tsc --build"
+  },
   "dependencies": {
     "@types/node": "^16.11.12"
   }

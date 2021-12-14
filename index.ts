@@ -221,6 +221,7 @@ export class GenEnumMember extends GenDecl
 export class GenEnum extends GenDecl
 {
   is_exported = false;
+  output_all_set = false;
   name: string;
   members: GenEnumMember[];
   decls: GenDecl[] = [];
@@ -250,22 +251,24 @@ export class GenEnum extends GenDecl
       output.push(...member.output());
     }
     output.push(`}`);
-    output.push(`${this.is_exported ? 'export ':''}namespace ${this.name} {`);
-    output.push(`${this.is_exported ? 'export ':''} const all = () : ${this.name}[] => ([`);
-    for(let member of this.members)
-    {
-      output.push(`${this.name}.${member.name},`);
+    if(this.output_all_set) {
+      output.push(`${this.is_exported ? 'export ':''}namespace ${this.name} {`);
+      output.push(`${this.is_exported ? 'export ':''} const all = () : ${this.name}[] => ([`);
+      for(let member of this.members)
+      {
+        output.push(`${this.name}.${member.name},`);
+      }
+      output.push(`]);`);
+      output.push(`${this.is_exported ? 'export ':''}const set = new Set(all());`);
+      for(let decl of this.decls)
+      {
+        if(decl instanceof GenMethod)decl.needs_function = true;
+        if(decl instanceof GenMethod)decl.is_static = false;
+        if(decl instanceof GenMethod)decl.is_exported = this.is_exported;
+        output.push(...decl.output());
+      }
+      output.push(`}`);
     }
-    output.push(`]);`);
-    output.push(`${this.is_exported ? 'export ':''}const set = new Set(all());`);
-    for(let decl of this.decls)
-    {
-      if(decl instanceof GenMethod)decl.needs_function = true;
-      if(decl instanceof GenMethod)decl.is_static = false;
-      if(decl instanceof GenMethod)decl.is_exported = this.is_exported;
-      output.push(...decl.output());
-    }
-    output.push(`}`);
     return output;
   }
 }
