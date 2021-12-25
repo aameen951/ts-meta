@@ -74,7 +74,7 @@ export declare class GenMethod extends GenDecl {
     is_exported: boolean;
     needs_function: boolean;
     constructor(name: string, args?: GenMethodArgs, body?: string[]);
-    output(): string[];
+    output(): any[];
 }
 export declare class GenPropertyGetter extends GenDecl {
     name: string;
@@ -121,14 +121,14 @@ export declare class GenGVar extends GenDecl {
     is_exported: boolean;
     is_const: boolean;
     constructor(name: string, value: string, type?: GenType);
-    output(): string[];
+    output(): any[];
 }
 export declare class GenTypeRaw extends GenDecl {
     name: string;
     raw_value: string;
     is_exported: boolean;
     constructor(name: string, raw_value: string);
-    output(): string[];
+    output(): any[];
 }
 export declare class GenFile {
     private ctx;
@@ -168,7 +168,6 @@ export declare class GenCtx {
     decls: Map<string, GenDecl>;
     file(filename: string): GenFile;
     end_phase(): void;
-    query_decl(name: string): GenDecl | undefined;
+    query_decl(name: string): GenDecl;
     output(): Promise<void>;
 }
-//# sourceMappingURL=index.d.ts.map

@@ -1,21 +1,6 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GenCtx = exports.GenProc = exports.GenTag = exports.GenFile = exports.GenTypeRaw = exports.GenGVar = exports.GenClass = exports.GenEnum = exports.GenEnumMember = exports.GenPropertySetter = exports.GenPropertyGetter = exports.GenMethod = exports.GenAttr = exports.GenDecl = exports.GenNullable = exports.GenMap2 = exports.GenMap = exports.GenArr = exports.GenPrimitive = exports.GenNamedType = exports.GenRawType = void 0;
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-class GenRawType {
+import fs from 'fs';
+import path from 'path';
+export class GenRawType {
     constructor(raw) {
         this.raw = raw;
     }
@@ -24,8 +9,7 @@ class GenRawType {
         return new GenNamedType(raw);
     }
 }
-exports.GenRawType = GenRawType;
-class GenNamedType {
+export class GenNamedType {
     constructor(name) {
         this.name = name;
     }
@@ -34,51 +18,45 @@ class GenNamedType {
         return new GenNamedType(name);
     }
 }
-exports.GenNamedType = GenNamedType;
-class GenPrimitive {
+export class GenPrimitive {
     constructor(name) {
         this.name = name;
     }
     to_str() { return this.name; }
 }
-exports.GenPrimitive = GenPrimitive;
 GenPrimitive.str = new GenPrimitive("string");
 GenPrimitive.num = new GenPrimitive("number");
 GenPrimitive.bool = new GenPrimitive("boolean");
 GenPrimitive.any = new GenPrimitive("any");
-class GenArr {
+export class GenArr {
     constructor(base) {
         this.base = base;
     }
     to_str() { return `${this.base.to_str()}[]`; }
     static of(base) { return new GenArr(base); }
 }
-exports.GenArr = GenArr;
-class GenMap {
+export class GenMap {
     constructor(base) {
         this.base = base;
     }
     to_str() { return `Map<string, ${this.base.to_str()}>`; }
     static of(base) { return new GenMap(base); }
 }
-exports.GenMap = GenMap;
-class GenMap2 {
+export class GenMap2 {
     constructor(base) {
         this.base = base;
     }
     to_str() { return `Map2<${this.base.to_str()}>`; }
     static of(base) { return new GenMap2(base); }
 }
-exports.GenMap2 = GenMap2;
-class GenNullable {
+export class GenNullable {
     constructor(base) {
         this.base = base;
     }
     to_str() { return `(${this.base.to_str()} | null)`; }
     static of(base) { return new GenNullable(base); }
 }
-exports.GenNullable = GenNullable;
-class GenDecl {
+export class GenDecl {
     constructor() {
         this._tags = new Map();
     }
@@ -90,7 +68,6 @@ class GenDecl {
         }
     }
 }
-exports.GenDecl = GenDecl;
 function default_value_for_type(type) {
     if (type instanceof GenPrimitive) {
         switch (type.name) {
@@ -120,7 +97,7 @@ function default_value_for_type(type) {
         return `null`;
     }
 }
-class GenAttr extends GenDecl {
+export class GenAttr extends GenDecl {
     constructor(name, type, default_val, optional = false, ...tags) {
         super();
         this.for_type = false;
@@ -138,8 +115,7 @@ class GenAttr extends GenDecl {
         return output;
     }
 }
-exports.GenAttr = GenAttr;
-class GenMethod extends GenDecl {
+export class GenMethod extends GenDecl {
     constructor(name, args = [], body = []) {
         super();
         this.is_static = false;
@@ -157,8 +133,7 @@ class GenMethod extends GenDecl {
         return output;
     }
 }
-exports.GenMethod = GenMethod;
-class GenPropertyGetter extends GenDecl {
+export class GenPropertyGetter extends GenDecl {
     constructor(name, body = []) {
         super();
         this.name = name;
@@ -168,8 +143,7 @@ class GenPropertyGetter extends GenDecl {
         return [`get ${this.name}(){`, ...this.body, `}`];
     }
 }
-exports.GenPropertyGetter = GenPropertyGetter;
-class GenPropertySetter extends GenDecl {
+export class GenPropertySetter extends GenDecl {
     constructor(name, type, body = []) {
         super();
         this.name = name;
@@ -180,8 +154,7 @@ class GenPropertySetter extends GenDecl {
         return [`set ${this.name}(value: ${this.type.to_str()}){`, ...this.body, `}`];
     }
 }
-exports.GenPropertySetter = GenPropertySetter;
-class GenEnumMember extends GenDecl {
+export class GenEnumMember extends GenDecl {
     constructor(name, value) {
         super();
         this.name = name;
@@ -193,8 +166,7 @@ class GenEnumMember extends GenDecl {
         ];
     }
 }
-exports.GenEnumMember = GenEnumMember;
-class GenEnum extends GenDecl {
+export class GenEnum extends GenDecl {
     constructor(name) {
         super();
         this.is_exported = false;
@@ -244,8 +216,7 @@ class GenEnum extends GenDecl {
         return output;
     }
 }
-exports.GenEnum = GenEnum;
-class GenClass extends GenDecl {
+export class GenClass extends GenDecl {
     constructor(name) {
         super();
         this.is_exported = false;
@@ -271,8 +242,7 @@ class GenClass extends GenDecl {
         return output;
     }
 }
-exports.GenClass = GenClass;
-class GenGVar extends GenDecl {
+export class GenGVar extends GenDecl {
     constructor(name, value, type) {
         super();
         this.is_exported = false;
@@ -291,8 +261,7 @@ class GenGVar extends GenDecl {
         return output;
     }
 }
-exports.GenGVar = GenGVar;
-class GenTypeRaw extends GenDecl {
+export class GenTypeRaw extends GenDecl {
     constructor(name, raw_value) {
         super();
         this.is_exported = false;
@@ -306,7 +275,6 @@ class GenTypeRaw extends GenDecl {
         return output;
     }
 }
-exports.GenTypeRaw = GenTypeRaw;
 class _FileGroup extends GenDecl {
     constructor(type) {
         super();
@@ -316,7 +284,7 @@ class _FileGroup extends GenDecl {
         throw new Error('Method not implemented.');
     }
 }
-class GenFile {
+export class GenFile {
     constructor(ctx, path) {
         this.skip_generation = false;
         this.ctx = ctx;
@@ -325,42 +293,40 @@ class GenFile {
         this.imports = [];
     }
     get decls() { return this._decls.filter(d => !(d instanceof _FileGroup)); }
-    output() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.skip_generation)
-                return;
-            const output = [];
-            output.push("/// AUTO GENERATED");
-            for (let imp of this.imports) {
-                let path = imp.path.replace(/\\/g, "/");
-                if (path.endsWith(".ts"))
-                    path = path.slice(0, -3);
-                output.push(`import {${imp.identifiers.join(", ")}} from "${path}";`);
-            }
-            output.push("");
-            let is_in_group = false;
-            for (let decl of this._decls) {
-                if (decl instanceof _FileGroup) {
-                    if (decl.type === 'begin_group')
-                        is_in_group = true;
-                    if (decl.type === 'end_group') {
-                        is_in_group = false;
-                        output.push("");
-                    }
-                }
-                else {
-                    output.push(...decl.output());
-                    if (!is_in_group) {
-                        output.push("");
-                    }
+    async output() {
+        if (this.skip_generation)
+            return;
+        const output = [];
+        output.push("/// AUTO GENERATED");
+        for (let imp of this.imports) {
+            let path = imp.path.replace(/\\/g, "/");
+            if (path.endsWith(".ts"))
+                path = path.slice(0, -3);
+            output.push(`import {${imp.identifiers.join(", ")}} from "${path}";`);
+        }
+        output.push("");
+        let is_in_group = false;
+        for (let decl of this._decls) {
+            if (decl instanceof _FileGroup) {
+                if (decl.type === 'begin_group')
+                    is_in_group = true;
+                if (decl.type === 'end_group') {
+                    is_in_group = false;
+                    output.push("");
                 }
             }
-            const file_data = output.join("\r\n");
-            yield fs_1.default.promises.writeFile(this.path, file_data, 'utf-8');
-        });
+            else {
+                output.push(...decl.output());
+                if (!is_in_group) {
+                    output.push("");
+                }
+            }
+        }
+        const file_data = output.join("\r\n");
+        await fs.promises.writeFile(this.path, file_data, 'utf-8');
     }
     add_rel_import(target_path, identifiers) {
-        let rel_path = path_1.default.relative(path_1.default.dirname(this.path), path_1.default.join(this.ctx.project_dir, target_path));
+        let rel_path = path.relative(path.dirname(this.path), path.join(this.ctx.project_dir, target_path));
         if (!rel_path.startsWith("./") && !rel_path.startsWith("../"))
             rel_path = './' + rel_path;
         this.imports.push({ path: rel_path, identifiers });
@@ -400,21 +366,18 @@ class GenFile {
     begin_group() { this._decls.push(new _FileGroup('begin_group')); }
     end_group() { this._decls.push(new _FileGroup('end_group')); }
 }
-exports.GenFile = GenFile;
-class GenTag {
+export class GenTag {
     constructor(name, data) {
         this.name = name;
         this.data = data;
     }
 }
-exports.GenTag = GenTag;
-class GenProc {
+export class GenProc {
     constructor(ctx) {
         this.ctx = ctx;
     }
 }
-exports.GenProc = GenProc;
-class GenCtx {
+export class GenCtx {
     constructor(project_dir) {
         this.project_dir = project_dir;
         this.files = [];
@@ -430,7 +393,7 @@ class GenCtx {
         }
     }
     file(filename) {
-        const file_path = path_1.default.join(this.project_dir, filename + '.ts');
+        const file_path = path.join(this.project_dir, filename + '.ts');
         const file = new GenFile(this, file_path);
         this.files.push(file);
         return file;
@@ -447,12 +410,10 @@ class GenCtx {
     query_decl(name) {
         return this.decls.get(name);
     }
-    output() {
-        return __awaiter(this, void 0, void 0, function* () {
-            for (let file of this.files) {
-                yield file.output();
-            }
-        });
+    async output() {
+        for (let file of this.files) {
+            await file.output();
+        }
     }
 }
-exports.GenCtx = GenCtx;
+//# sourceMappingURL=index.js.map
